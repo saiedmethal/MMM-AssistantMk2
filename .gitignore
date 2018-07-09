@@ -1,0 +1,6 @@
+*.json
+profiles/*.json
+.AppleDouble
+.AppleDouble/*
+profiles/.AppleDouble
+resources/.AppleDouble

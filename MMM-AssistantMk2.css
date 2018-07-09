@@ -1,0 +1,143 @@
+#ASSISTANT {
+  height:48px;
+  min-width:48px;
+  border:4px;
+  border-radius:28px;
+  background-color:#999;
+  text-align:center;
+  display:inline-block;
+}
+
+#ASSISTANT_SCREEN {
+  width:90%;
+  height:90%;
+  overflow:auto;
+  border:none;
+  display:none;
+  position:absolute;
+  top:5%;
+  left:5%;
+}
+
+#ASSISTANT_SCREEN.show {
+  display:block;
+}
+#ASSISTANT_SCREEN.hide {
+  display:none;
+}
+
+#ASSISTANT_VIDEO_WRAPPER {
+  width:100%;
+  height:100%;
+  overflow:none;
+  border:none;
+  display:none;
+  position:absolute;
+  top:0;
+  left:0;
+}
+#ASSISTANT_VIDEO {
+  width:90%;
+  height:90%;
+  overflow:auto;
+  border:none;
+  position:absolute;
+  top:5%;
+  left:5%;
+}
+
+
+
+#ASSISTANT_VIDEO_WRAPPER.show {
+  display:block;
+}
+#ASSISTANT_VIDEO_WRAPPER.hide {
+  display:none;
+}
+
+#ASSISTANT_MIC {
+  height:40px;
+  width:40px;
+  background-size:contain;
+  border-radius:20px;
+  display:inline-block;
+  margin-top:4px;
+}
+
+#ASSISTANT_MESSAGE {
+  display:inline-block;
+  line-height:40px;
+  vertical-align:top;
+}
+
+/*
+sleeping, waiting, listening, understanding, error
+*/
+
+/* sleeping */
+#ASSISTANT.sleeping {
+  background-color:#999;
+}
+
+.sleeping #ASSISTANT_MIC {
+  background-image:url('resources/mic_black_192x192.png');
+  background-color:#999;
+}
+
+/* waiting */
+#ASSISTANT.waiting {
+  background-color:#FFF;
+}
+
+.waiting #ASSISTANT_MIC {
+  background-image:url('resources/mic_white_192x192.png');
+  background-color:#999;
+}
+
+/* listening */
+#ASSISTANT.listening {
+  background-color:#999;
+  padding-left:4px;
+  padding-right:4px;
+  border:4px solid #FFF;
+}
+
+.listening #ASSISTANT_MIC {
+  background-image:url('resources/mic_white_192x192.png');
+  background-color:#3D5AFE;
+}
+
+.listening #ASSISTANT_MESSAGE {
+  color:#FFF;
+  margin-left:4px;
+}
+
+
+/* understanding */
+#ASSISTANT.understanding {
+  background-color:#3D5AFE;
+  padding-left:4px;
+  padding-right:4px;
+  border:4px solid #FFF;
+}
+
+.understanding #ASSISTANT_MIC {
+  background-image:url('resources/mic_black_192x192.png');
+  background-color:#FFF;
+}
+
+.understanding #ASSISTANT_MESSAGE {
+  color:#FFF;
+  margin-left:4px;
+}
+
+
+/* error */
+#ASSISTANT.error {
+  background-color:#FE5A3D;
+}
+
+.error #ASSISTANT_MIC {
+  background-image:url('resources/mic_grey_192x192.png');
+  background-color:#999;
+}
