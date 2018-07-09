@@ -1,4 +1,6 @@
-*.json
+credentials.json
+tokens.json
+token.json
 profiles/*.json
 node_modules/
 temp_screen.html

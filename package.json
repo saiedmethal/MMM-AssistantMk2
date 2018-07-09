@@ -1,0 +1,28 @@
+{
+  "name": "MMM-AssistantMk2",
+  "version": "1.0.0",
+  "description": "An embedded Google Assistant on MagicMirror",
+  "main": "MMM-AssistantMk2.js",
+  "keywords": [
+    "magic mirror",
+    "module",
+    "google assistant",
+    "voice",
+    "embedded",
+    "assistant for device"
+  ],
+  "author": "eouia",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eouia/MMM-AssistantMk2/issues"
+  },
+  "dependencies": {
+    "google-assistant": "^0.5.2",
+    "node-record-lpcm16": "^0.3.0",
+    "speaker": "^0.4.1",
+    "string_decoder": "^1.1.1"
+  },
+  "devDependencies": {
+    "electron-rebuild": "^1.8.1"
+  }
+}
