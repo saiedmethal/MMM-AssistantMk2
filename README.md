@@ -31,6 +31,7 @@ npm install
 There could be some warnings, but it gives no harm for using.
 
 If your mirror is running as `SERVERONLY` mode, no other installation step is needed. But if you want to run your mirror as `KIOSK` mode, you should rebuild binaries to match with electron. And as you know, there could be many problems or not. Wish you good luck.
+(I recommend to execute this after making profiles.)
 
 ```sh
 npm install --save-dev electron-rebuild
@@ -79,7 +80,7 @@ Manually Register a Device with the REST API](https://developers.google.com/assi
 (I think if your mirror is only one, there is no need for deviceInstanceId)
 
 ### Configuration
-Below values are pre-set as default values. It means, you can put even nothing in config field. (Don't be panic. most of belows are not important to you.)
+Below values are pre-set as default values. It means, you can put even nothing in config field. (Don't be panic. most of belows are not needed for you.)
 ```javascript
   config: {
     deviceModelId: '', // (optional) It should be described in your config.json to use.
@@ -181,7 +182,7 @@ In case of multi-users, use like this.
     ],
     interface: { //Assuming using several H/W buttons to activate assistant per user.
       activateNotification: "BUTTON_PRESSED",
-      selectPayloadProfile: 'button',
+      selectPayloadProfile: 'button_type',
       defaultPayloadProfile: 'dad',
     }
   }
