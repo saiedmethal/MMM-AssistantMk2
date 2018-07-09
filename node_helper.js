@@ -88,7 +88,7 @@ module.exports = NodeHelper.create({
             speakerHelper.update(data)
           } catch (error) {
             conversation.end()
-            this.sendSocketNotification("CONVERSATION_ENDED", err)
+            this.sendSocketNotification("CONVERSATION_ENDED", error)
           }
 
         }
