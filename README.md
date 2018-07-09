@@ -1,5 +1,5 @@
 ## MMM-AssistantMk2
-`MMM-AssistantMk2` is an embedded google assistant on MagicMirror. This is more improved than my last `[MMM-Assistant](https://github.com/eouia/MMM-Assistant)`.
+`MMM-AssistantMk2` is an embedded google assistant on MagicMirror. This is more improved than my last [MMM-Assistant](https://github.com/eouia/MMM-Assistant).
 
 ### What is different?
 I made `MMM-Assistant` last year, But it was notorious with it's difficulty of installation and configuration. And it was based on the old APIs and dependencies. I was so disappointed with it's limitation, so I have half forgotten this module. Sorry about that to everyone.
