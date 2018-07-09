@@ -1,5 +1,7 @@
 *.json
 profiles/*.json
+node_modules/
+temp_screen.html
 .AppleDouble
 .AppleDouble/*
 profiles/.AppleDouble

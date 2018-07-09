@@ -22,8 +22,6 @@ Module.register("MMM-AssistantMk2", {
       "SHUTDOWN" : "shut down",
       "TEST" : "test"
     },
-    speakerOffScript: "pactl set-sink-volume 5 0",
-    speakerOnScript: "pactl set-sink-volume 5 100%", // These scripts are used for transcription hooking
     youtube: {
       use:true,
       height: "720",
@@ -46,12 +44,14 @@ Module.register("MMM-AssistantMk2", {
         // fr-CA, fr-FR, it-IT, ja-JP, es-ES, es-MX, ko-KR, pt-BR
         // https://developers.google.com/assistant/sdk/reference/rpc/languages
       },
+      /*
       "jarvis" : {
         lang: "de-DE"
       },
       "snowboy" : {
         lang: "ko-KR"
       }
+      */
     },
     interface: {
       activateNotification: 'HOTWORD_DETECTED', // Which Notification be used for wakeup.
@@ -223,7 +223,6 @@ Module.register("MMM-AssistantMk2", {
 
 
   socketNotificationReceived: function (notification, payload) {
-    console.log("@@", notification)
     switch(notification) {
       case 'INITIALIZED':
         //do nothing
@@ -263,7 +262,6 @@ Module.register("MMM-AssistantMk2", {
         break
 
       case 'NOT_SUPPORTED':
-        console.log("not supported")
         this.hideScreen()
         this.displayStatus('error', 'NOT_SUPPORTED')
         var timer = setTimeout(()=>{
@@ -272,8 +270,6 @@ Module.register("MMM-AssistantMk2", {
         }, 3000)
         break
       case 'DEVICE_ACTION':
-        console.log("device action", payload)
-
         if (payload.command == 'action.devices.commands.EXCEPTION') {
           var status = JSON.parse(payload.params.status)
           this.hideScreen()
