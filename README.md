@@ -56,10 +56,15 @@ cd ~/MagicMirror/modules/MMM-AssistantMk2
 node auth_and_test.js
 ```
    a. If you meet some errors related with node version, execute `npm rebuild` and try again.
+   
    b. At first execution, this script will try opening a browser and getting permission of a specific user for using this Assistant.
+   
    c. After confirmation, Some code (`4/ABCD1234XXXXX....`) will appear in the browser. Copy that code and paste in your console's request (`Paste your code:`)
+   
    d. On success, Prompt `Type your request` will be displayed. Type anything for testing assistant. (e.g; `Hello`, `How is the weather today?`)
+   
    e. Now you can find `token.json` in your `MMM-AssistantMk2` directory. Move it under `profiles` directory with rename `default.json`.
+   
  ```sh
  mv token.json ./profiles/default.json
  ```
