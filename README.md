@@ -197,6 +197,33 @@ In case of multi-users, use like this.
 ```
 In case of using custom action(traits), you should describe `deviceModelId` (additionally `deviceInstanceId`)
 
+
+### Notification
+
+#### Configurable Notification
+As default configs, below Notificatoins are set.(using `MMM-Hotword`) You can change these to another for using other module for waking Assistant up in your `config.js`.
+
+- Assistant Activate Notification (incomming)
+```
+`HOTWORD_DETECTED` - payload {hotword:"`profileName`"}
+```
+
+- Assistant Finished Result Notification (outgoing)
+```
+`HOTWORD_RESUME` - payload null
+```
+
+#### Predefined Outgoing Notifications as ASSISTANT response.
+|Notification|Payload|Description|
+|---|---|---|
+|ASSISTANT_ERROR_NOT_FOUND_PROFILE|null|When your waking with profile has failed, Because invalid profile name
+|ASSISTANT_HOOK|{hook:"`HOOKED_STRING`"}|Your defined hooking phrase is caught in your speech.
+|ASSISTANT_ACTION|`FOUND_ACTION_OBJECT`|When the response is defined or customized action of Assistant.
+
+
+
+
+
 ### Tested
 - MagicMirror : 2.4.1
 - nodeJS : 8.11.3 & 10.0.x
