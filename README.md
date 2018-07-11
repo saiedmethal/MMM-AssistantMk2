@@ -43,28 +43,27 @@ npm install --save-dev electron-rebuild
 
 ### Get Auth and credentials to make profile.
 1. Create or open a project in the [Actions Console](https://console.actions.google.com/)
-1. After creation, Enable `Google Assistant API` for your project in the [Cloud Platform Console](https://console.cloud.google.com/)
-1. Return to Actions Console and Follow the instructions to [register a device model](https://developers.google.com/assistant/sdk/guides/service/python/embed/register-device)<br>
+2. After creation, Enable `Google Assistant API` for your project in the [Cloud Platform Console](https://console.cloud.google.com/)
+3. Return to Actions Console and Follow the instructions to [register a device model](https://developers.google.com/assistant/sdk/guides/service/python/embed/register-device)<br>
 (If you cannot find `Device registration` menu, you can use this URL https://console.actions.google.com/u/[0]/project/[yourprojectId]/deviceregistration/) (change [] to your project) or [Manual registration](https://developers.google.com/assistant/sdk/reference/device-registration/register-device-manual))
 (Device Type: phone is recommended. And in`Surface capabiliites`, turn all stuffs on.)
 
-1. In register steps(step 2), you can download your `credentials.json` for OAuth. Carefully store it in `MMM-AssistantMk2` directory.
+4. In register steps(step 2), you can download your `credentials.json` for OAuth. Carefully store it in `MMM-AssistantMk2` directory.
  - Or you can find your credentials from [Cloud Platform Console](https://console.cloud.google.com/) (Your Project > APIs & Services > Credentials)
-1. In your SBC, you can run auth-tool for authentification. (not via SSH)
+5. In your SBC, you can run auth-tool for authentification. (not via SSH)
 ```sh
 cd ~/MagicMirror/modules/MMM-AssistantMk2
 node auth_and_test.js
 ```
- 0. If you meet some errors related with node version, execute `npm rebuild` and try again.
- 1. At first execution, this script will try opening a browser and getting permission of a specific user for using this Assistant.
- 1. After confirmation, Some code (`4/ABCD1234XXXXX....`) will appear in the browser. Copy that code and paste in your console's request (`Paste your code:`)
- 1. On success, Prompt `Type your request` will be displayed. Type anything for testing assistant. (e.g; `Hello`, `How is the weather today?`)
- 1. Everything OK?
- 1. Now you can find `token.json` in your `MMM-AssistantMk2` directory. Move it under `profiles` directory with rename `default.json`.
+   a. If you meet some errors related with node version, execute `npm rebuild` and try again.
+   b. At first execution, this script will try opening a browser and getting permission of a specific user for using this Assistant.
+   c. After confirmation, Some code (`4/ABCD1234XXXXX....`) will appear in the browser. Copy that code and paste in your console's request (`Paste your code:`)
+   d. On success, Prompt `Type your request` will be displayed. Type anything for testing assistant. (e.g; `Hello`, `How is the weather today?`)
+   e. Now you can find `token.json` in your `MMM-AssistantMk2` directory. Move it under `profiles` directory with rename `default.json`.
  ```sh
  mv token.json ./profiles/default.json
  ```
- 1. If you want to make more profiles(for your family??), do the step 4 again. and move the `token.json` generated to profiles directory with another profile name, and don't forget setting your configuration.
+  f. If you want to make more profiles(for your family??), do the step 5 again. and move the `token.json` generated to profiles directory with another profile name, and don't forget setting your configuration.
 ```sh
 mv token.json ./profiles/mom.json
 ```
