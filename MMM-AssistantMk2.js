@@ -61,7 +61,6 @@ Module.register("MMM-AssistantMk2", {
 			selectPayloadProfile: "hotword", // And which payload field will be used for selecting profile.
 			defaultPayloadProfile: "default", //When `selectPayloadProfile` value would not be found in `profiles`.
 			finishedNotification: "HOTWORD_RESUME", //When Assistant answer your question, this notification will be sent and stop itself.
-			actionNotification: "ASSISTANT_ACTION", //When Assistant catch `trait actions` to execute,
 		},
 		record: {
 			sampleRate    : 16000,      // audio sample rate
@@ -218,7 +217,7 @@ Module.register("MMM-AssistantMk2", {
 			var cfg = this.filterNotification(payload)
 
 			if (cfg.profile == null) {
-				this.sendNotification("ASSTNT_ERROR_NOT_FOUND_PROFILE")
+				this.sendNotification("ASSISTANT_ERROR_NOT_FOUND_PROFILE")
 				break
 			}
 			this.sendSocketNotification("START", cfg)
