@@ -26,8 +26,8 @@ Module.register("MMM-AssistantMk2", {
 		},
 		youtube: {
 			use:true,
-			height: "720",
-			width: "1280"
+			height: "480",
+			width: "854"
 		},
 		auth: {
 			keyFilePath: "./credentials.json"
@@ -130,12 +130,11 @@ Module.register("MMM-AssistantMk2", {
 				},
 				events: {
 					"onReady": (event)=>{
+						console.log("here")
 						event.target.playVideo()
 					},
 					"onStateChange": (event)=>{
-						if (event.data == 2) {
-							event.target.playVideo()
-						}
+						console.log("status", event.data)
 						if (event.data == 0) {
 							setTimeout(()=>{
 								event.target.stopVideo()
@@ -190,18 +189,20 @@ Module.register("MMM-AssistantMk2", {
 	},
 
 	filterNotification: function(payload) {
+		console.log(payload)
 		var selector = this.config.defaultPayloadProfile
 		var value = null
 
 		if (typeof payload[this.config.interface.selectPayloadProfile] !== "undefined") {
 			selector = payload[this.config.interface.selectPayloadProfile]
 		}
-
+		console.log("?:", selector)
 		if (typeof this.config.profiles[selector] == "undefined") {
 			selector = this.config.interface.defaultPayloadProfile
 		}
+		console.log("!:", selector)
 		value = this.config.profiles[selector]
-
+		console.log(selector, value)
 		return {profile:selector, config:value}
 	},
 
