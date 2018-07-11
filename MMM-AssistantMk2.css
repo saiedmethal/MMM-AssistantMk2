@@ -37,13 +37,13 @@
   left:0;
 }
 #ASSISTANT_VIDEO {
-  width:90%;
-  height:90%;
+  width:80%;
+  height:80%;
   overflow:auto;
   border:none;
   position:absolute;
-  top:5%;
-  left:5%;
+  top:10%;
+  left:10%;
 }
 
 
