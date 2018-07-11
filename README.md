@@ -10,7 +10,7 @@ So, I'd made this module newly.
 #### Improvements
 - pure javascript, no other python program or daemon needed.
 - Hotword([MMM-Hotword](https://github.com/eouia/MMM-Hotword)) and Assistant([MMM-AssistantMk2]()) are separated. Now you can wake up your Assistant with other methods. (e.g; H/W buttons or other module notifications or anything)
-- Command mode is deprecated. Now Google Assistant itself has ability to react with custom action. (But I recommend to use IFTTT or transcriptionHooking.) 
+- Command mode is deprecated. Now Google Assistant itself has ability to react with custom action. And possible to use IFTTT or transcriptionHooking.) 
   - See [MMM-NotificationTrigger](https://github.com/eouia/MMM-NotificationTrigger) for transcriptionHooking or using IFTTT.
   - See [MMM-GAction](https://github.com/eouia/MMM-GAction) for custom google action.
 - Visual response!!! (like Google Home with screen or Google Assistant on your phone, but some functions are limited or missed.)
