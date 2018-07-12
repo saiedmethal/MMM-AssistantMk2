@@ -84,7 +84,7 @@ You can get `deviceModelId` as a result of previous [register a device model](ht
 You need additional `google-assistant-sdk` library. See [
 Manually Register a Device with the REST API](https://developers.google.com/assistant/sdk/reference/device-registration/register-device-manual#get-access-token) page.
 
-### Configuration (DON'T PANNIC!!)
+### Configuration (DON'T PANIC!!)
 Below values are pre-set as default values. It means, you can put even nothing in config field. (Most of belows are not needed for you.)
 ```javascript
   config: {
