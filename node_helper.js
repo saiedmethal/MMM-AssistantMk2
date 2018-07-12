@@ -8,7 +8,6 @@ const path = require("path")
 const record = require("node-record-lpcm16")
 const Speaker = require("speaker")
 const GoogleAssistant = require("google-assistant")
-const speakerHelper = require("./speaker-helper")
 const exec = require("child_process").exec;
 
 var NodeHelper = require("node_helper")
@@ -66,6 +65,7 @@ module.exports = NodeHelper.create({
 			let foundHook = []
 			let foundAction = null
 			let foundVideo = null
+			let audioError = 0
 
 
 			// setup the conversation
@@ -73,10 +73,14 @@ module.exports = NodeHelper.create({
 				// send the audio buffer to the speaker
 				.on("audio-data", (data) => {
 					try {
-						speakerHelper.update(data);
+					  speaker.write(data)
 					} catch (error) {
-						console.log("audio-data-error", error)
-						this.sendSocketNotification("AUDIO_ERROR")
+						if (audioError == 0) {
+							speaker.end() //
+							console.log(error)
+							this.sendSocketNotification("ERROR", "AUDIO_ERROR")
+						}
+						audioError++
 					}
     		})
 				// done speaking, close the mic
@@ -123,6 +127,7 @@ module.exports = NodeHelper.create({
 				})
 				// once the conversation is ended, see if we need to follow up
 				.on("ended", (error, continueConversation) => {
+					speaker.end() //
 					var payload = {
 						"foundHook": foundHook,
 						"foundAction": foundAction,
@@ -169,6 +174,7 @@ module.exports = NodeHelper.create({
 				})
 				// catch any errors
 				.on("error", (error) => {
+					speaker.end() //
 					console.log("Conversation Error:", error)
 					this.sendSocketNotification("CONVERSATION_ERROR", error)
 				})
@@ -187,17 +193,12 @@ module.exports = NodeHelper.create({
 			 channels: 1,
 			 sampleRate: cfgInstance.conversation.audio.sampleRateOut,
 			});
-			speakerHelper.init(speaker)
 			speaker
 				.on("open", () => {
 					this.sendSocketNotification("SPEAKING_START")
-					speakerHelper.open()
 				})
 				.on("close", () => {
 					this.sendSocketNotification("SPEAKING_END")
-					//if (hooked) {
-					//  exec(this.config.speakerOnScript, (e,so,se)=>{})
-					//}
 					if (openMicAgain) {
 						this.sendSocketNotification("CONTINUOUS_TURN")
 						assistant.start(cfgInstance.conversation)

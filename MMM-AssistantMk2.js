@@ -36,7 +36,7 @@ Module.register("MMM-AssistantMk2", {
 			encodingIn: "LINEAR16", // supported are LINEAR16 / FLAC (defaults to LINEAR16)
 			sampleRateIn: 16000, // supported rates are between 16000-24000 (defaults to 16000)
 			encodingOut: "LINEAR16", // supported are LINEAR16 / MP3 / OPUS_IN_OGG (defaults to LINEAR16)
-			sampleRateOut: 24000, // supported are 16000 / 24000 (defaults to 24000)
+			sampleRateOut: 16000, // supported are 16000 / 24000 (defaults to 24000)
 		},
 		profiles: {
 			"default" : {
@@ -130,11 +130,9 @@ Module.register("MMM-AssistantMk2", {
 				},
 				events: {
 					"onReady": (event)=>{
-						console.log("here")
 						event.target.playVideo()
 					},
 					"onStateChange": (event)=>{
-						console.log("status", event.data)
 						if (event.data == 0) {
 							setTimeout(()=>{
 								event.target.stopVideo()
@@ -189,20 +187,16 @@ Module.register("MMM-AssistantMk2", {
 	},
 
 	filterNotification: function(payload) {
-		console.log(payload)
 		var selector = this.config.defaultPayloadProfile
 		var value = null
 
 		if (typeof payload[this.config.interface.selectPayloadProfile] !== "undefined") {
 			selector = payload[this.config.interface.selectPayloadProfile]
 		}
-		console.log("?:", selector)
 		if (typeof this.config.profiles[selector] == "undefined") {
 			selector = this.config.interface.defaultPayloadProfile
 		}
-		console.log("!:", selector)
 		value = this.config.profiles[selector]
-		console.log(selector, value)
 		return {profile:selector, config:value}
 	},
 
