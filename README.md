@@ -336,9 +336,9 @@ Here is configuration sample.
 },
 ```
 
-### If you have touchscreen and don't want to use snowboy to wakeup.
-Just click the Mic icon to activating.
-(I'll provide more touchscreen-friendly functions some days.)
+### If you have touchscreen and don't want to use snowboy to wakeup
+Just click the Mic icon to activate.
+(I'll provide more touchscreen-friendly functions in some days.)
 
 ### Tested
 - MagicMirror : 2.4.1
