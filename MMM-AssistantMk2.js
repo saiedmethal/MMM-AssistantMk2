@@ -14,6 +14,8 @@ Module.register("MMM-AssistantMk2", {
 			},
 		},
 		useScreen: true,  // set this to true if you want to output results to a screen
+		//useWeb: true, // set this to true if you want to see the referenced webpage in mirror. (Reserved for next update)
+		//showed contents will be hidden when new conversation starts or interface.stopContentNotification is comming.
 		screenZoom: "80%",
 		transcriptionHook: {
 			/*
@@ -36,10 +38,12 @@ Module.register("MMM-AssistantMk2", {
 			encodingIn: "LINEAR16", // supported are LINEAR16 / FLAC (defaults to LINEAR16)
 			sampleRateIn: 16000, // supported rates are between 16000-24000 (defaults to 16000)
 			encodingOut: "LINEAR16", // supported are LINEAR16 / MP3 / OPUS_IN_OGG (defaults to LINEAR16)
-			sampleRateOut: 16000, // supported are 16000 / 24000 (defaults to 24000)
+			sampleRateOut: 24000, // supported are 16000 / 24000 (defaults to 24000)
 		},
+		defaultProfile: "default",
 		profiles: {
 			"default" : {
+				profileFile: "default.json",
 				lang: "en-US"
 				//currently available (estimation, not all tested):
 				//  de-DE, en-AU, en-CA, en-GB, en-US, en-IN
@@ -47,20 +51,15 @@ Module.register("MMM-AssistantMk2", {
 				// https://developers.google.com/assistant/sdk/reference/rpc/languages
 			},
 			/*
-			"jarvis" : {
+			"kids" : {
+				profileFile: "jarvis.json",
 				lang: "de-DE"
 			},
-			"snowboy" : {
+			"myself_korean" : {
+				profileFile: "default.json",
 				lang: "ko-KR"
 			}
 			*/
-		},
-		interface: {
-			activateNotification: "HOTWORD_DETECTED", // Which Notification be used for wakeup.
-			// (`HOTWORD_DETECTED` is used by `MMM-Hotword` module, but you can adjust this for your other module(e.g; buttons or timer...))
-			selectPayloadProfile: "hotword", // And which payload field will be used for selecting profile.
-			defaultPayloadProfile: "default", //When `selectPayloadProfile` value would not be found in `profiles`.
-			finishedNotification: "HOTWORD_RESUME", //When Assistant answer your question, this notification will be sent and stop itself.
 		},
 		record: {
 			sampleRate    : 16000,      // audio sample rate
@@ -91,7 +90,14 @@ Module.register("MMM-AssistantMk2", {
 		var wrapper = document.createElement("div")
 		wrapper.className = "sleeping"
 		wrapper.id = "ASSISTANT"
+		wrapper.onclick = ()=> {
+			if (wrapper.className == "sleeping") {
+				this.sendSocketNotification("START", this.config.profiles[this.config.defaultProfile])
+			}
+		}
 		var micImg = document.createElement("div")
+
+
 		micImg.id = "ASSISTANT_MIC"
 		var message = document.createElement("div")
 		message.id = "ASSISTANT_MESSAGE"
@@ -101,6 +107,9 @@ Module.register("MMM-AssistantMk2", {
 	},
 
 	prepareScreen: function() {
+		var web = document.createElement("iframe")
+		web.id = "ASSISTANT_WEB"
+		document.body.appendChild(web)
 		var screen = document.createElement("iframe")
 		screen.id = "ASSISTANT_SCREEN"
 		document.body.appendChild(screen)
@@ -152,9 +161,21 @@ Module.register("MMM-AssistantMk2", {
 				}
 			})
 		}
-
-
 	},
+
+	showContent: function(url) {
+		var screen = document.getElementById("ASSISTANT_WEB")
+		screen.src = url
+		setTimeout(()=>{
+			screen.className = "show"
+		},500)
+	},
+
+	hideContent: function() {
+		var screen = document.getElementById("ASSISTANT_WEB")
+		screen.className = "hide"
+	},
+
 	showScreen: function() {
 		var screen = document.getElementById("ASSISTANT_SCREEN")
 		screen.src = this.data.path + "/temp_screen.html"
@@ -163,10 +184,12 @@ Module.register("MMM-AssistantMk2", {
 		},500)
 
 	},
+
 	hideScreen: function() {
 		var screen = document.getElementById("ASSISTANT_SCREEN")
 		screen.className = "hide"
 	},
+
 	showVideo: function(id) {
 		this.ytp.loadVideoById(id, 0, "default")
 		this.ytp.playVideo()
@@ -179,25 +202,12 @@ Module.register("MMM-AssistantMk2", {
 		this.ytp.stopVideo()
 		wrapper.className = "hide"
 	},
+
 	displayStatus: function(mode, text) {
 		var wrapper = document.getElementById("ASSISTANT")
 		wrapper.className = mode
 		var message = document.getElementById("ASSISTANT_MESSAGE")
 		message.innerHTML = text
-	},
-
-	filterNotification: function(payload) {
-		var selector = this.config.defaultPayloadProfile
-		var value = null
-
-		if (typeof payload[this.config.interface.selectPayloadProfile] !== "undefined") {
-			selector = payload[this.config.interface.selectPayloadProfile]
-		}
-		if (typeof this.config.profiles[selector] == "undefined") {
-			selector = this.config.interface.defaultPayloadProfile
-		}
-		value = this.config.profiles[selector]
-		return {profile:selector, config:value}
 	},
 
 	notificationReceived: function (notification, payload, sender) {
@@ -208,14 +218,21 @@ Module.register("MMM-AssistantMk2", {
 		case "DOM_OBJECTS_CREATED":
 			this.prepareScreen()
 			break
-		case this.config.interface.activateNotification:
-			var cfg = this.filterNotification(payload)
-
-			if (cfg.profile == null) {
-				this.sendNotification("ASSISTANT_ERROR_NOT_FOUND_PROFILE")
-				break
+		case "ASSISTANT_ACTIVATE":
+			var profileKey = ""
+			var profile = {}
+			if (payload.profile in this.config.profiles) {
+				profileKey = payload.profile
+			} else {
+				profileKey = this.config.defaultProfile
 			}
-			this.sendSocketNotification("START", cfg)
+			profile = this.config.profiles[profileKey]
+			this.sendSocketNotification("START", profile)
+			break
+		case "ASSISTANT_CLEAR":
+			this.hideScreen()
+			this.hideVideo()
+			this.hideContent()
 			break
 		}
 	},
@@ -231,6 +248,7 @@ Module.register("MMM-AssistantMk2", {
 		case "STARTED":
 			this.displayStatus("waiting", "")
 			this.hideVideo()
+			this.hideContent()
 			this.hideScreen()
 			break
 		case "TRANSCRIPTION":
@@ -256,6 +274,7 @@ Module.register("MMM-AssistantMk2", {
 					console.log ("Video:", payload.foundVideo)
 					setTimeout(()=>{
 						this.hideScreen()
+						this.hideContent()
 						this.showVideo(payload.foundVideo)
 					}, 1500)
 				}
@@ -268,10 +287,17 @@ Module.register("MMM-AssistantMk2", {
 						this.displayStatus("error", status.description)
 					}
 				}
+				if (payload.foundWeb) {
+					setTimeout(()=>{
+						this.hideScreen()
+						this.hideVideo()
+						this.showContent(payload.foundContent)
+					}, 1500)
+				}
 				if (payload.continue != true) {
 					setTimeout(()=>{
 						this.displayStatus("sleeping", "")
-						this.sendNotification(this.config.interface.finishedNotification, null)
+						this.sendNotification("ASSISTANT_DEACTIVATED", null)
 					}, 1000)
 				}
 			}
@@ -283,7 +309,7 @@ Module.register("MMM-AssistantMk2", {
 			this.displayStatus("error", "CONVERSATION ERROR")
 			setTimeout(()=>{
 				this.displayStatus("sleeping", "")
-				this.sendNotification(this.config.interface.finishedNotification, null)
+				this.sendNotification("ASSISTANT_DEACTIVATED", null)
 			}, 3000)
 			break
 		case "SPEAKING_START":
@@ -298,14 +324,14 @@ Module.register("MMM-AssistantMk2", {
 			this.displayStatus("error", "CONVERSATION ERROR")
 			setTimeout(()=>{
 				this.displayStatus("sleeping", "")
-				this.sendNotification(this.config.interface.finishedNotification, null)
+				this.sendNotification("ASSISTANT_DEACTIVATED", null)
 			}, 3000)
 			break
 		case "AUDIO_ERROR": //this is not your fault... sometimes google assistant lost her voice.. Even google staffs can't help this currently.
 			this.displayStatus("error", "AUDIO OUT ERROR")
 			setTimeout(()=>{
 				this.displayStatus("sleeping", "")
-				this.sendNotification(this.config.interface.finishedNotification, null)
+				this.sendNotification("ASSISTANT_DEACTIVATED", null)
 			}, 3000)
 			break
 		}

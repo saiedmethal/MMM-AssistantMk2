@@ -36,18 +36,17 @@ module.exports = NodeHelper.create({
 	},
 
 	activate: function(payload) {
-		var profile = payload.profile
-		var profileConfig = payload.config
+		console.log("payload", payload)
 		var transcriptionHook = this.config.transcriptionHook
 
 		var cfgInstance = {
 			auth:{
 				keyFilePath : path.resolve(__dirname, this.config.auth.keyFilePath),
-				savedTokensPath : path.resolve(__dirname, "profiles/" + profile + ".json"),
+				savedTokensPath : path.resolve(__dirname, "profiles/" + payload.profileFile),
 			},
 			conversation : {
 				audio : this.config.audio,
-				lang : profileConfig.lang,
+				lang : payload.lang,
 				deviceModelId : this.config.deviceModelId,
 				deviceId : this.config.deviceInstanceId,
 				deviceLocation : this.config.deviceLocation,
@@ -98,7 +97,6 @@ module.exports = NodeHelper.create({
 								 var v = transcriptionHook[k];
 								 var found = data.transcription.match(new RegExp(v, "ig"))
 								 if (found !== null) {
-									 //this.sendSocketNotification("HOOK", k)
 									 foundHook.push(k)
 								 }
 							}
@@ -150,12 +148,14 @@ module.exports = NodeHelper.create({
 				})
 
 				.on("screen-data", (screen) => {
-
 					var self = this
 					var file = require("fs")
 					var filePath = path.resolve(__dirname,"temp_screen.html")
 					var str = screen.data.toString("utf8")
 					str = str.replace("html,body{", "html,body{zoom:" + this.config.screenZoom + ";")
+
+					// TODO:I'll put some code here for web scrapping for contents reading.
+
 					var re = new RegExp("v\=([0-9a-zA-Z]+)", "ig")
 					var youtube = re.exec(str)
 					var contents = file.writeFile(filePath, str,

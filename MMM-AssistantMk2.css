@@ -8,6 +8,24 @@
   display:inline-block;
 }
 
+#ASSISTANT_WEB {
+  width:90%;
+  height:90%;
+  overflow:auto;
+  border:none;
+  display:none;
+  position:absolute;
+  top:5%;
+  left:5%;
+}
+
+#ASSISTANT_WEB.show {
+  display:block;
+}
+#ASSISTANT_WEB.hide {
+  display:none;
+}
+
 #ASSISTANT_SCREEN {
   width:90%;
   height:90%;
