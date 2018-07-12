@@ -212,7 +212,7 @@ In case of using custom action(traits), you should describe `deviceModelId` (add
 
 
 ### Recommended Usage
-It's good to use this module with `[MMM-Hotword](https://github.com/eouia/MMM-Hotword)` (for waking Assistant and give a profile) and `[MMM-NotificationTrigger](https://github.com/eouia/MMM-NotificationTrigger)` (for relaying from MMM-Hotword to MMM-AssistantMk2 and also for relaying from MMM-AssistantMk2 to other module.)
+It's good to use this module with [`MMM-Hotword`](https://github.com/eouia/MMM-Hotword) (for waking Assistant and give a profile) and [`MMM-NotificationTrigger`](https://github.com/eouia/MMM-NotificationTrigger) (for relaying from MMM-Hotword to MMM-AssistantMk2 and also for relaying from MMM-AssistantMk2 to other module.)
 Here is configuration sample.
 ```javascript
 //MMM-NotificationTrigger 
@@ -335,6 +335,10 @@ Here is configuration sample.
       }
 },
 ```
+
+### If you have touchscreen and don't want to use snowboy to wakeup.
+Just click the Mic icon to activating.
+(I'll provide more touchscreen-friendly functions some days.)
 
 ### Tested
 - MagicMirror : 2.4.1
