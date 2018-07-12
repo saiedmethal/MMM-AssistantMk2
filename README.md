@@ -9,7 +9,7 @@ So, I'd made this module newly.
 
 #### Improvements
 - pure javascript, no other python program or daemon needed.
-- Hotword([MMM-Hotword](https://github.com/eouia/MMM-Hotword)) and Assistant([MMM-AssistantMk2]()) are separated. Now you can wake up your Assistant with other methods. (e.g; H/W buttons or other module notifications or anything)
+- Hotword([MMM-Hotword](https://github.com/eouia/MMM-Hotword)) and Assistant([MMM-AssistantMk2]()) are separated. Now you can wake up your Assistant with other modules. (e.g; H/W buttons or other module notifications or anything)
 - Command mode is deprecated. Now Google Assistant itself has ability to react with custom action. And possible to use IFTTT or transcriptionHooking.) 
   - See [MMM-NotificationTrigger](https://github.com/eouia/MMM-NotificationTrigger) for transcriptionHooking or using IFTTT.
   - See [MMM-GAction](https://github.com/eouia/MMM-GAction) for custom google action.
@@ -46,7 +46,6 @@ npm install --save-dev electron-rebuild
 2. After creation, Enable `Google Assistant API` for your project in the [Cloud Platform Console](https://console.cloud.google.com/)
 3. Return to Actions Console and Follow the instructions to [register a device model](https://developers.google.com/assistant/sdk/guides/service/python/embed/register-device)<br>
 (If you cannot find `Device registration` menu, you can use this URL https://console.actions.google.com/u/[0]/project/[yourprojectId]/deviceregistration/) (change [] to your project) or [Manual registration](https://developers.google.com/assistant/sdk/reference/device-registration/register-device-manual))
-(Device Type: phone is recommended. And in`Surface capabiliites`, turn all stuffs on.)
 
 4. In register steps(step 2), you can download your `credentials.json` for OAuth. Carefully store it in `MMM-AssistantMk2` directory.
  - Or you can find your credentials from [Cloud Platform Console](https://console.cloud.google.com/) (Your Project > APIs & Services > Credentials)
@@ -57,13 +56,13 @@ node auth_and_test.js
 ```
    a. If you meet some errors related with node version, execute `npm rebuild` and try again.
    
-   b. At first execution, this script will try opening a browser and getting permission of a specific user for using this Assistant.
+   b. At first execution, this script will try opening a browser and getting permission of a specific user for using this Assistant. (So you'd better to execute this script in your RPI shell, not via SSH)
    
    c. After confirmation, Some code (`4/ABCD1234XXXXX....`) will appear in the browser. Copy that code and paste in your console's request (`Paste your code:`)
    
    d. On success, Prompt `Type your request` will be displayed. Type anything for testing assistant. (e.g; `Hello`, `How is the weather today?`)
    
-   e. Now you can find `token.json` in your `MMM-AssistantMk2` directory. Move it under `profiles` directory with rename `default.json`.
+   e. Now you can find `token.json` in your `MMM-AssistantMk2` directory. Move it under `profiles` directory with rename `default.json`. This will be used in module as `default` profile.
    
  ```sh
  mv token.json ./profiles/default.json
@@ -84,84 +83,83 @@ You can get `deviceModelId` as a result of previous [register a device model](ht
 #### For `deviceInstanceId`
 You need additional `google-assistant-sdk` library. See [
 Manually Register a Device with the REST API](https://developers.google.com/assistant/sdk/reference/device-registration/register-device-manual#get-access-token) page.
-(I think if your mirror is only one, there is no need for deviceInstanceId)
 
 ### Configuration
-Below values are pre-set as default values. It means, you can put even nothing in config field. (Don't be panic. most of belows are not needed for you.)
+Below values are pre-set as default values. It means, you can put even nothing in config field. (Don't panic. most of belows are not needed for you.)
 ```javascript
   config: {
-    deviceModelId: '', // (optional) It should be described in your config.json to use.
-    deviceInstanceId: '', // (optional) It should be described in your config.json to use.
-    deviceLocation: { // (optional)
-      coordinates: { // set the latitude and longitude of the device (rf. mygeoposition.com)
-        latitude: 51.5033640, // -90.0 - +90.0
-        longitude: -0.1276250, // -180.0 - +180.0
-      },
-    },
-    useScreen: true,  // set this to true if you want to output results to a screen
-    screenZoom: '80%',
-    transcriptionHook: { // When you say these words, this module pass the result and your hooking notification(interface.actionNotification will be broadcasted.
-      "SCREEN_OFF" : "screen off",
-      "SCREEN_ON" : "screen on",
-      "REBOOT" : "reboot",
-      "SHUTDOWN" : "shut down",
-      "TEST" : "test"
-    },
-    youtube: {
-      use:true,
-      height: "720",
-      width: "1280"
-    },
-    auth: {
-      keyFilePath: './credentials.json'
-    },
-    audio: {
-        encodingIn: 'LINEAR16', // supported are LINEAR16 / FLAC (defaults to LINEAR16)
-        sampleRateIn: 16000, // supported rates are between 16000-24000 (defaults to 16000)
-        encodingOut: 'LINEAR16', // supported are LINEAR16 / MP3 / OPUS_IN_OGG (defaults to LINEAR16)
-        sampleRateOut: 24000, // supported are 16000 / 24000 (defaults to 24000)
-    },
-    profiles: {
-      "default" : {
-        lang: "en-US"
-        //currently available (estimation, not all tested):
-        //  de-DE, en-AU, en-CA, en-GB, en-US, en-IN
-        // fr-CA, fr-FR, it-IT, ja-JP, es-ES, es-MX, ko-KR, pt-BR
-        // https://developers.google.com/assistant/sdk/reference/rpc/languages
-      },
-      /* For multi profiles or languages.
-      "jarvis" : {
-        lang: "de-DE"
-      },
-      "snowboy" : {
-        lang: "ko-KR"
-      }
-      */
-    },
-    interface: {
-      activateNotification: 'HOTWORD_DETECTED', // Which Notification be used for wakeup.
-      // (`HOTWORD_DETECTED` is used by `MMM-Hotword` module, but you can set this for your other module(e.g; buttons or timer...))
-      selectPayloadProfile: 'hotword', // And which payload field will be used for selecting profile.
-      defaultPayloadProfile: 'default', //When `selectPayloadProfile` value would not be found in `profiles`.
-      finishedNotification: 'HOTWORD_RESUME', //When Assistant answer your question, this notification will be sent and stop itself.
-      actionNotification: 'ASSISTANT_ACTION', //When Assistant catch `trait actions` to execute,
-    },
-    record: {
-      sampleRate    : 16000,      // audio sample rate
-      threshold     : 0.5,        // silence threshold (rec only)
-      thresholdStart: null,       // silence threshold to start recording, overrides threshold (rec only)
-      thresholdEnd  : null,       // silence threshold to end recording, overrides threshold (rec only)
-      silence       : 1.0,        // seconds of silence before ending
-      verbose       : false,      // log info to the console
-      recordProgram : 'arecord',  // Defaults to 'arecord' - also supports 'rec' and 'sox'
-      device        : null        // recording device (e.g.: 'plughw:1')
-    },
-  },
+		deviceModelId: "", // (OPTIONAL for gaction)It should be described in your config.json
+		deviceInstanceId: "", // (OPTIONAL for gaction)It should be described in your config.json
+		deviceLocation: { // (OPTIONAL)
+			coordinates: { // set the latitude and longitude of the device (rf. mygeoposition.com)
+				latitude: 51.5033640, // -90.0 - +90.0
+				longitude: -0.1276250, // -180.0 - +180.0
+			},
+		},
+		useScreen: true,  // set this to true if you want to output results to a screen
+		//showed contents will be hidden when new conversation starts or ASSISTANT_STOP_CONTENT is comming.
+
+    screenZoom: "80%",
+		transcriptionHook: { //if you set hooking phrase here, this module will catch these words in your speech and emit ASSISTANT_HOOK notification.
+			/*
+			"SCREEN_OFF" : "screen off",
+			"SCREEN_ON" : "screen on",
+			"REBOOT" : "reboot",
+			"SHUTDOWN" : "shut down",
+			"TEST" : "test"
+			*/
+		},
+		youtube: {
+			use:true, //if you want to autoplay of youtube clip in responses of Assistance.
+			height: "480", //This is not real player size. It's for ideal player size for loading video. (related to video quality somehow.)
+			width: "854"
+		},
+		auth: {
+			keyFilePath: "./credentials.json"
+		},
+		audio: {
+			encodingIn: "LINEAR16", // supported are LINEAR16 / FLAC (defaults to LINEAR16)
+			sampleRateIn: 16000, // supported rates are between 16000-24000 (defaults to 16000)
+			encodingOut: "LINEAR16", // supported are LINEAR16 / MP3 / OPUS_IN_OGG (defaults to LINEAR16)
+			sampleRateOut: 24000, // supported are 16000 / 24000 (defaults to 24000)
+		},
+		defaultProfile: "default", // This default profile should be in `profiles` field.
+		profiles: {
+			"default" : {
+				profileFile: "default.json", //this path will be `~/MagicMirror/modules/MMM-AssistantMk2/profiles/default.json"
+				lang: "en-US"
+				//currently available (estimation, not all tested):
+				//  de-DE, en-AU, en-CA, en-GB, en-US, en-IN
+				// fr-CA, fr-FR, it-IT, ja-JP, es-ES, es-MX, ko-KR, pt-BR
+				// https://developers.google.com/assistant/sdk/reference/rpc/languages
+			},
+			/* You can use multi-profile for your family.
+			"kids" : {
+				profileFile: "jarvis.json",
+				lang: "de-DE"
+			},
+			"myself_korean" : {
+				profileFile: "default.json",
+				lang: "ko-KR"
+			}
+			*/
+		},
+		record: {
+			sampleRate    : 16000,      // audio sample rate
+			threshold     : 0.5,        // silence threshold (rec only)
+			thresholdStart: null,       // silence threshold to start recording, overrides threshold (rec only)
+			thresholdEnd  : null,       // silence threshold to end recording, overrides threshold (rec only)
+			silence       : 1.0,        // seconds of silence before ending
+			verbose       : false,      // log info to the console
+			recordProgram : "arecord",  // Defaults to "arecord" - also supports "rec" and "sox"
+			device        : null        // recording device (e.g.: "plughw:1")
+		},
+	},
 
 ```
 
 
-If you want to use default configuration, just use like this. (When you use with `MMM-Hotword`)
+If you want to use default configuration, just use like this.
 ```javascript
 {
   module: "MMM-AssistantMk2",
@@ -176,53 +174,167 @@ In case of multi-users, use like this.
   module: "MMM-AssistantMk2",
   position: "top_left",
   config: {
+    defaultProfile: "dad"
     profiles: [
       "dad": {
-        lang: "de-DE" //`profiles/dad.json` is needed.
+        profileFile: "dad.json"
+        lang: "de-DE" 
       },
       "mom": {
-        lang: "en-US" //`profiles/mom.json` is needed.
+        profileFile: "mom.json"
+        lang: "en-US" 
       },
       "tommy": {
-        lang: "en-US" //`profiles/tommy.json` is needed.
+        profileFile: "tommy.json"
+        lang: "en-US" 
       }
     ],
-    interface: { //Assuming using several H/W buttons to activate assistant per user.
-      activateNotification: "BUTTON_PRESSED",
-      selectPayloadProfile: 'button_type',
-      defaultPayloadProfile: 'dad',
-    }
   }
 },
 ```
-In case of using custom action(traits), you should describe `deviceModelId` (additionally `deviceInstanceId`)
+In case of using custom action(traits), you should describe `deviceModelId` (additionally `deviceInstanceId`) in configuration file also.
 
 
 ### Notification
-
-#### Configurable Notification
-As default configs, below Notificatoins are set.(using `MMM-Hotword`) You can change these to another for using other module for waking Assistant up in your `config.js`.
-
-- Assistant Activate Notification (incomming)
-```
-`HOTWORD_DETECTED` - payload {hotword:"`profileName`"}
-```
-
-- Assistant Finished Result Notification (outgoing)
-```
-`HOTWORD_RESUME` - payload null
-```
-
-#### Predefined Outgoing Notifications as ASSISTANT response.
+#### Incoming Notifications as ASSISTANT request.
 |Notification|Payload|Description|
 |---|---|---|
-|ASSISTANT_ERROR_NOT_FOUND_PROFILE|null|When your waking with profile has failed, Because invalid profile name
+|ASSISTANT_ACTIVATE|null|Assistant will start.
+|ASSISTANT_CLEAR|null|Current playing video or content will be disappeared. And Assistant turns to sleep mode for waiting invocation.
+
+#### Outgoing Notifications as ASSISTANT response.
+|Notification|Payload|Description|
+|---|---|---|
+|ASSISTANT_ACTIVATED|null|Assistant is started now.
+|ASSISTANT_DEACTIVATED|null|Assistant is stopped now.
 |ASSISTANT_HOOK|{hook:"`HOOKED_STRING`"}|Your defined hooking phrase is caught in your speech.
 |ASSISTANT_ACTION|`FOUND_ACTION_OBJECT`|When the response is defined or customized action of Assistant.
 
 
-
-
+### Recommended Usage
+It's good to use this module with `[MMM-Hotword](https://github.com/eouia/MMM-Hotword)` (for waking Assistant and give a profile) and `[MMM-NotificationTrigger](https://github.com/eouia/MMM-NotificationTrigger)` (for relaying from MMM-Hotword to MMM-AssistantMk2 and also for relaying from MMM-AssistantMk2 to other module.)
+Here is configuration sample.
+```javascript
+//MMM-NotificationTrigger 
+{
+      module: "MMM-NotificationTrigger",
+      config: {
+        useWebhook:true,
+        triggers:[
+          { //If there is ASSISTANT_ACTION, you can control other module here. In this sample, ALERT module will show message.
+            trigger: "ASSISTANT_ACTION", 
+            triggerSenderFilter: function(sender) {
+              if (sender.name == "MMM-AssistantMk2") {
+                return true;
+              } else {
+                return false;
+              }
+            },
+            triggerPayloadFilter: function(payload) {
+              return true;
+            },
+            fires: [
+              {
+                fire:"SHOW_ALERT",
+                payload: function(payload) {
+                  return {
+                    type: "notification",
+                    title: payload[0].execution[0].type,
+                    message: payload[0].execution[0].command
+                  };
+                },
+              },
+            ],
+          },
+          { //If you use IFTTT for your voice command, this sample will help you.
+            trigger: "IFTTT_COMMAND",
+            fires: [
+              {
+                fire:"SHOW_ALERT",
+                payload: function(payload) {
+                  return payload
+                },
+              },
+            ],
+          },
+          { //If you use transcriptionHook for your voice command, this sample will help you.
+            trigger: "ASSISTANT_HOOK",
+            fires: [
+              {
+                fire:"SHOW_ALERT",
+                payload: function(payload) {
+                  return {
+                    title: "HOOK",
+                    message: "Are you saying " + payload.hook +"?",
+                    timer: 5000
+                  }
+                },
+              },
+            ],
+          },
+          { //This make your Assistant to activate with MMM-Hotword
+            trigger: "HOTWORD_DETECTED",
+            fires: [
+              {
+                fire:"ASSISTANT_ACTIVATE",
+                payload: function(payload) {
+                  return {
+                    "profile": payload.hotword
+                  }
+                }
+              },
+              {
+                fire:"HOTWORD_PAUSE"
+              }
+            ]
+          },
+          { //This make your MMM-Hotword to listen your invocation.
+            trigger: "ASSISTANT_DEACTIVATED",
+            fires: [
+              {
+                fire:"HOTWORD_RESUME"
+              }
+            ]
+          },
+        ]
+      }
+    }
+},
+//MMM-Hotword
+{ //Using MMM-Hotword for Assistant wakeup.
+      module: "MMM-Hotword",
+      config: {} //using default configuration.
+},
+///MMM-GAction
+{ //Using custom action for Assistant command
+      module: "MMM-GAction",
+      config: {}
+},
+//MMM-Assistant
+{
+      module: "MMM-AssistantMk2",
+      position: "top_center",
+      config: {
+        useScreen: true,
+        deviceModelId: "MY_MAGIC_MIRROR_MODEL_ID",
+        deviceInstanceId: "MY_MAGIC_MIRROR_IN_LIVINGROOM",
+        deviceLocation: { // (optional)
+          coordinates: { // set the latitude and longitude of the device (rf. mygeoposition.com)
+            latitude: 50.0851200, // -90.0 - +90.0
+            longitude: 8.4763300, // -180.0 - +180.0
+          },
+        },
+        transcriptionHook: {
+          "UNICORN": "unicorn" // this is just sample.
+        },
+        profiles: {
+          "default" : {
+            lang: "en-US"
+          },
+        }
+      }
+},
+```
 
 ### Tested
 - MagicMirror : 2.4.1
@@ -231,4 +343,7 @@ As default configs, below Notificatoins are set.(using `MMM-Hotword`) You can ch
 
 
 ### TODO
-debugging??
+- debugging??
+- Touchscreen friendly
+- If response has additional info with external web page, showing full website. (But... how to control? eg. scrolling???)
+- map or carousel displaying... (screenOut for Assistant was developed for TV device, so not perfectly matched with UX on Mirror.)
