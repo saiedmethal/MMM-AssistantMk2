@@ -38,7 +38,7 @@ If your mirror is running as `SERVERONLY` mode, no other installation step is ne
 
 ```sh
 npm install --save-dev electron-rebuild
-./node_modules/.bin/electron-rebuild   # It could takes dozens sec.
+./node_modules/.bin/electron-rebuild   # It could takes several minutes.
 ```
 
 ### Get Auth and credentials to make profile.
@@ -199,7 +199,7 @@ In case of using custom action(traits), you should describe `deviceModelId` (add
 #### Incoming Notifications as ASSISTANT request.
 |Notification|Payload|Description|
 |---|---|---|
-|ASSISTANT_ACTIVATE|null|Assistant will start.
+|ASSISTANT_ACTIVATE|{profile:`String`}|Assistant will start with this profile name.
 |ASSISTANT_CLEAR|null|Current playing video or content will be disappeared. And Assistant turns to sleep mode for waiting invocation.
 
 #### Outgoing Notifications as ASSISTANT response.
