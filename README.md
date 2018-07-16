@@ -38,7 +38,7 @@ If your mirror is running as `SERVERONLY` mode, no other installation step is ne
 
 ```sh
 npm install --save-dev electron-rebuild
-./node_modules/.bin/electron-rebuild   # It could takes several minutes.
+./node_modules/.bin/electron-rebuild   # It could takes 10~30 minutes.
 ```
 
 ### Get Auth and credentials to make profile.
