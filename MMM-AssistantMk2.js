@@ -112,11 +112,17 @@ Module.register("MMM-AssistantMk2", {
 		document.body.appendChild(web)
 		var screen = document.createElement("iframe")
 		screen.id = "ASSISTANT_SCREEN"
+		screen.onclick = ()=> {
+			this.hideScreen()
+		}
 		document.body.appendChild(screen)
 		var video = document.createElement("div")
 		video.id = "ASSISTANT_VIDEO"
 		var videoWrapper = document.createElement("div")
 		videoWrapper.id = "ASSISTANT_VIDEO_WRAPPER"
+		videoWrapper.onclick = ()=> {
+			this.hideVideo()
+		}
 		videoWrapper.appendChild(video)
 		document.body.appendChild(videoWrapper)
 
