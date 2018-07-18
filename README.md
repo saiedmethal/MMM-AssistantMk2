@@ -329,6 +329,7 @@ Here is configuration sample.
         },
         profiles: {
           "default" : {
+	    profileFile: "default.json",
             lang: "en-US"
           },
         }
