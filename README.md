@@ -275,6 +275,10 @@ Here is configuration sample.
           { //This make your Assistant to activate with MMM-Hotword
             trigger: "HOTWORD_DETECTED",
             fires: [
+	      {
+                fire:"HOTWORD_PAUSE",
+                delay: 200
+              },
               {
                 fire:"ASSISTANT_ACTIVATE",
                 payload: function(payload) {
@@ -283,9 +287,6 @@ Here is configuration sample.
                   }
                 }
               },
-              {
-                fire:"HOTWORD_PAUSE"
-              }
             ]
           },
           { //This make your MMM-Hotword to listen your invocation.
