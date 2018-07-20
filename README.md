@@ -338,6 +338,64 @@ Here is configuration sample.
 },
 ```
 
+And for who doesn't want any commands (using just pure Assistant for test)
+```javascript
+//MMM-NotificationTrigger 
+{
+      module: "MMM-NotificationTrigger",
+      config: {
+        useWebhook:true,
+        triggers:[
+          { //This make your Assistant to activate with MMM-Hotword
+            trigger: "HOTWORD_DETECTED",
+            fires: [
+	      {
+                fire:"HOTWORD_PAUSE",
+                delay: 200
+              },
+              {
+                fire:"ASSISTANT_ACTIVATE",
+                payload: function(payload) {
+                  return {
+                    "profile": payload.hotword
+                  }
+                }
+              },
+            ]
+          },
+          { //This make your MMM-Hotword to listen your invocation.
+            trigger: "ASSISTANT_DEACTIVATED",
+            fires: [
+              {
+                fire:"HOTWORD_RESUME"
+              }
+            ]
+          },
+        ]
+      }
+    }
+},
+//MMM-Hotword
+{ //Using MMM-Hotword for Assistant wakeup.
+      module: "MMM-Hotword",
+      config: {} //using default configuration.
+},
+//MMM-Assistant
+{
+      module: "MMM-AssistantMk2",
+      position: "top_center",
+      config: {
+        useScreen: true,
+        profiles: {
+          "default" : {
+	    profileFile: "default.json",
+            lang: "en-US"
+          },
+        }
+      }
+},
+```
+
 ### If you have touchscreen and don't want to use snowboy to wakeup
 Just click the Mic icon to activate.
 (I'll provide more touchscreen-friendly functions in some days.)
