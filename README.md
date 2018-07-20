@@ -373,7 +373,6 @@ And for who doesn't want any commands (using just pure Assistant for test)
           },
         ]
       }
-    }
 },
 //MMM-Hotword
 { //Using MMM-Hotword for Assistant wakeup.
