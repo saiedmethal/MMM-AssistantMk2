@@ -277,10 +277,10 @@ Here is configuration sample.
             fires: [
 	      {
                 fire:"HOTWORD_PAUSE",
-                delay: 200
               },
               {
                 fire:"ASSISTANT_ACTIVATE",
+		delay: 200,
                 payload: function(payload) {
                   return {
                     "profile": payload.hotword
@@ -351,10 +351,11 @@ And for who doesn't want any commands (using just pure Assistant for test)
             fires: [
 	      {
                 fire:"HOTWORD_PAUSE",
-                delay: 200
+
               },
               {
                 fire:"ASSISTANT_ACTIVATE",
+		delay: 200,
                 payload: function(payload) {
                   return {
                     "profile": payload.hotword
