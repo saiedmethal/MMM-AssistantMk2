@@ -33,7 +33,12 @@ npm install
 ```
 There could be some warnings, but it gives no harm for using.
 
-If your mirror is running as `SERVERONLY` mode, no other installation step is needed. But if you want to run your mirror as `KIOSK` mode, you should rebuild binaries to match with electron. And as you know, there could be many problems or not. Wish you good luck.
+If your mirror is running as `SERVERONLY` mode, no other installation step is needed. But if you want to run your mirror as `KIOSK` mode, you should rebuild binaries to match with electron. You will meet this or something similar erros.
+```
+NODE_MODULE_VERSION 59. This version of Node.js requires
+NODE_MODULE_VERSION 57. Please try re-compiling or re-installing
+```
+And as you know, there could be many problems or not. Wish you good luck.
 (I recommend to execute this after making profiles.)
 
 ```sh
@@ -338,18 +343,17 @@ Here is configuration sample.
 },
 ```
 
-And for who doesn't want any commands (using just pure Assistant for test)
+And for who doesn't want any commands (using just pure Assistant for test). You can start from this.
 ```javascript
-//MMM-NotificationTrigger 
 {
+      disabled:true,
       module: "MMM-NotificationTrigger",
       config: {
-        useWebhook:true,
         triggers:[
-          { //This make your Assistant to activate with MMM-Hotword
+          {
             trigger: "HOTWORD_DETECTED",
             fires: [
-	      {
+              {
                 fire:"HOTWORD_PAUSE",
 
               },
@@ -364,7 +368,7 @@ And for who doesn't want any commands (using just pure Assistant for test)
               },
             ]
           },
-          { //This make your MMM-Hotword to listen your invocation.
+          {
             trigger: "ASSISTANT_DEACTIVATED",
             fires: [
               {
@@ -375,24 +379,14 @@ And for who doesn't want any commands (using just pure Assistant for test)
         ]
       }
 },
-//MMM-Hotword
-{ //Using MMM-Hotword for Assistant wakeup.
+{
       module: "MMM-Hotword",
-      config: {} //using default configuration.
+      config: {}
 },
-//MMM-Assistant
 {
       module: "MMM-AssistantMk2",
       position: "top_center",
-      config: {
-        useScreen: true,
-        profiles: {
-          "default" : {
-	    profileFile: "default.json",
-            lang: "en-US"
-          },
-        }
-      }
+      config: {}
 },
 ```
 
@@ -404,6 +398,13 @@ Just click the Mic icon to activate.
 - MagicMirror : 2.4.1
 - nodeJS : 8.11.3 & 10.0.x
 - SBC : Asus TinkerBoard & Raspberry Pi 3 / Kiosk mode and Serveronly mode both work.
+
+
+### Known Issues
+- Invalid Parameters when youtube playing : Most of those cases, owner of video doesn't allow playing video out of youtube. try another.
+- Sometimes response without voice. : Yes, Google Tech team also knows that. 
+- Some functions are not supported : Originally, screen output is made for REAL SMART TV (e.g. LG TV) with Google Assistant, thus REAL TV can interact the screen output with remotecontroller or something automatic processed. but we aren't. 
+- Result of Image search? web search? : I'm considering how it could be used. it is not easy as my expectation.
 
 
 ### TODO
