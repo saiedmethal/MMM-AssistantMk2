@@ -346,7 +346,6 @@ Here is configuration sample.
 And for who doesn't want any commands (using just pure Assistant for test). You can start from this.
 ```javascript
 {
-      disabled:true,
       module: "MMM-NotificationTrigger",
       config: {
         triggers:[
