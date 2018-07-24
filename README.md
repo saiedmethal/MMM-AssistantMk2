@@ -125,7 +125,7 @@ Below values are pre-set as default values. It means, you can put even nothing i
 		audio: {
 			encodingIn: "LINEAR16", // supported are LINEAR16 / FLAC (defaults to LINEAR16)
 			sampleRateIn: 16000, // supported rates are between 16000-24000 (defaults to 16000)
-			encodingOut: "LINEAR16", // supported are LINEAR16 / MP3 / OPUS_IN_OGG (defaults to LINEAR16)
+			encodingOut: "LINEAR16", // supported are LINEAR16 / MP3 / OPUS_IN_OGG (defaults to LINEAR16), currently only LINEAR16 is implemented to output, others are not yet. so use LINEAR16.
 			sampleRateOut: 24000, // supported are 16000 / 24000 (defaults to 24000)
 		},
 		defaultProfile: "default", // This default profile should be in `profiles` field.
