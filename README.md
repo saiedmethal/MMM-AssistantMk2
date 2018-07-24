@@ -397,6 +397,7 @@ Just click the Mic icon to activate.
 - MagicMirror : 2.4.1
 - nodeJS : 8.11.3 & 10.0.x
 - SBC : Asus TinkerBoard & Raspberry Pi 3 / Kiosk mode and Serveronly mode both work.
+- on Pi Zero (or ARMv6 Architecture), You might need to rebuild modules from source. That is out of my ability, so I cannot help about that.
 
 
 ### Known Issues
