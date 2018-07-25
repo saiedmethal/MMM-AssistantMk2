@@ -4,6 +4,7 @@
 
 
 Module.register("MMM-AssistantMk2", {
+
 	defaults: {
 		deviceModelId: "", // It should be described in your config.json
 		deviceInstanceId: "", // It should be described in your config.json
@@ -18,13 +19,11 @@ Module.register("MMM-AssistantMk2", {
 		//showed contents will be hidden when new conversation starts or interface.stopContentNotification is comming.
 		screenZoom: "80%",
 		transcriptionHook: {
-			/*
-			"SCREEN_OFF" : "screen off",
-			"SCREEN_ON" : "screen on",
-			"REBOOT" : "reboot",
-			"SHUTDOWN" : "shut down",
-			"TEST" : "test"
-			*/
+			//"SCREEN_OFF" : "screen off",
+			//"SCREEN_ON" : "screen on",
+			//"REBOOT" : "reboot",
+			//"SHUTDOWN" : "shut down",
+			//"TEST" : "test"
 		},
 		youtube: {
 			use:true,
@@ -51,16 +50,15 @@ Module.register("MMM-AssistantMk2", {
 				// fr-CA, fr-FR, it-IT, ja-JP, es-ES, es-MX, ko-KR, pt-BR
 				// https://developers.google.com/assistant/sdk/reference/rpc/languages
 			},
-			/*
-			"kids" : {
-				profileFile: "jarvis.json",
-				lang: "de-DE"
-			},
-			"myself_korean" : {
-				profileFile: "default.json",
-				lang: "ko-KR"
-			}
-			*/
+
+			//"kids" : {
+			//	profileFile: "jarvis.json",
+			//	lang: "de-DE"
+			//},
+			//"myself_korean" : {
+			//	profileFile: "default.json",
+			//	lang: "ko-KR"
+			//}
 		},
 		record: {
 			sampleRate    : 16000,      // audio sample rate
@@ -85,6 +83,7 @@ Module.register("MMM-AssistantMk2", {
 		this.headerContent = ""
 		this.screenContent = null
 		this.ytp = null
+		console.log("start")
 	},
 
 	getDom : function() {
@@ -104,6 +103,7 @@ Module.register("MMM-AssistantMk2", {
 		message.id = "ASSISTANT_MESSAGE"
 		wrapper.appendChild(micImg)
 		wrapper.appendChild(message)
+		console.log("getDom")
 		return wrapper
 	},
 
@@ -148,11 +148,6 @@ Module.register("MMM-AssistantMk2", {
 					"onStateChange": (event)=>{
 						if (event.data == 0) {
 							setTimeout(()=>{
-								/*
-								event.target.stopVideo()
-								var wrapper = document.getElementById("ASSISTANT_VIDEO_WRAPPER")
-								wrapper.className = "hide"
-								*/
 								self.hideVideo()
 							}, 1000)
 
@@ -163,11 +158,6 @@ Module.register("MMM-AssistantMk2", {
 						var er = document.getElementById("ASSISTANT_VIDEO_ERROR")
 						er.innerHTML = "Youtube error: " + event.data
 						setTimeout(()=>{
-							/*
-							event.target.stopVideo()
-							var wrapper = document.getElementById("ASSISTANT_VIDEO_WRAPPER")
-							wrapper.className = "hide"
-							*/
 							self.hideVideo()
 						}, 5000)
 					}
@@ -376,8 +366,6 @@ Module.register("MMM-AssistantMk2", {
 		}
 	},
 
-
-
 	configAssignment : function (result) {
 		var stack = Array.prototype.slice.call(arguments, 1);
 		var item;
@@ -403,6 +391,5 @@ Module.register("MMM-AssistantMk2", {
 			}
 		}
 		return result;
-	},
+	}
 })
-                                                                                                           
