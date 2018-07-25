@@ -30,7 +30,7 @@ Module.register("MMM-AssistantMk2", {
 			use:true,
 			height: "480",
 			width: "854",
-			notifyPlaying: true, // tell other modules whether youtube is playing or not.
+			notifyPlaying: false, // tell other modules whether youtube is playing or not.
 		},
 		auth: {
 			keyFilePath: "./credentials.json"
@@ -113,17 +113,11 @@ Module.register("MMM-AssistantMk2", {
 		document.body.appendChild(web)
 		var screen = document.createElement("iframe")
 		screen.id = "ASSISTANT_SCREEN"
-		screen.onclick = ()=> {
-			this.hideScreen()
-		}
 		document.body.appendChild(screen)
 		var video = document.createElement("div")
 		video.id = "ASSISTANT_VIDEO"
 		var videoWrapper = document.createElement("div")
 		videoWrapper.id = "ASSISTANT_VIDEO_WRAPPER"
-		videoWrapper.onclick = ()=> {
-			this.hideVideo()
-		}
 		videoWrapper.appendChild(video)
 		var videoError = document.createElement("div")
 		videoError.id = "ASSISTANT_VIDEO_ERROR"
@@ -411,3 +405,4 @@ Module.register("MMM-AssistantMk2", {
 		return result;
 	},
 })
+                                                                                                           

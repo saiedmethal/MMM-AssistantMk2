@@ -10,7 +10,7 @@ So, I'd made this module newly.
 #### Improvements
 - pure javascript, no other python program or daemon needed.
 - Hotword([MMM-Hotword](https://github.com/eouia/MMM-Hotword)) and Assistant([MMM-AssistantMk2]()) are separated. Now you can wake up your Assistant with other modules. (e.g; H/W buttons or other module notifications or anything)
-- Command mode is deprecated. Now Google Assistant itself has ability to react with custom action. And possible to use IFTTT or transcriptionHooking.) 
+- Command mode is deprecated. Now Google Assistant itself has ability to react with custom action. And possible to use IFTTT or transcriptionHooking.)
   - See [MMM-NotificationTrigger](https://github.com/eouia/MMM-NotificationTrigger) for transcriptionHooking or using IFTTT.
   - See [MMM-GAction](https://github.com/eouia/MMM-GAction) for custom google action.
 - Visual response!!! (like Google Home with screen or Google Assistant on your phone, but some functions are limited or missed.)
@@ -19,6 +19,13 @@ So, I'd made this module newly.
 
 ### Screenshot
 [[PlaceHolder]]
+
+### Updates
+#### [1.0.1] - 2018.07.25.
+- Youtube playlist can be playable
+- Some uncaught youtube videos are caught now
+- On youtube player error, error code is shown
+- notifyPlaying option is added.
 
 ### Installation
 1. Install pre-dependencies
@@ -60,15 +67,15 @@ cd ~/MagicMirror/modules/MMM-AssistantMk2
 node auth_and_test.js
 ```
    a. If you meet some errors related with node version, execute `npm rebuild` and try again.
-   
+
    b. At first execution, this script will try opening a browser and getting permission of a specific user for using this Assistant. (So you'd better to execute this script in your RPI shell, not via SSH)
-   
+
    c. After confirmation, Some code (`4/ABCD1234XXXXX....`) will appear in the browser. Copy that code and paste in your console's request (`Paste your code:`)
-   
+
    d. On success, Prompt `Type your request` will be displayed. Type anything for testing assistant. (e.g; `Hello`, `How is the weather today?`)
-   
+
    e. Now you can find `token.json` in your `MMM-AssistantMk2` directory. Move it under `profiles` directory with rename `default.json`. This will be used in module as `default` profile.
-   
+
  ```sh
  mv token.json ./profiles/default.json
  ```
@@ -117,7 +124,8 @@ Below values are pre-set as default values. It means, you can put even nothing i
 		youtube: {
 			use:true, //if you want to autoplay of youtube clip in responses of Assistance.
 			height: "480", //This is not real player size. It's for ideal player size for loading video. (related to video quality somehow.)
-			width: "854"
+			width: "854",
+      notifyPlaying: false, // tell other modules whether youtube is playing or not.
 		},
 		auth: {
 			keyFilePath: "./credentials.json"
@@ -183,15 +191,15 @@ In case of multi-users, use like this.
     profiles: [
       "dad": {
         profileFile: "dad.json"
-        lang: "de-DE" 
+        lang: "de-DE"
       },
       "mom": {
         profileFile: "mom.json"
-        lang: "en-US" 
+        lang: "en-US"
       },
       "tommy": {
         profileFile: "tommy.json"
-        lang: "en-US" 
+        lang: "en-US"
       }
     ],
   }
@@ -220,14 +228,14 @@ In case of using custom action(traits), you should describe `deviceModelId` (add
 It's good to use this module with [`MMM-Hotword`](https://github.com/eouia/MMM-Hotword) (for waking Assistant and give a profile) and [`MMM-NotificationTrigger`](https://github.com/eouia/MMM-NotificationTrigger) (for relaying from MMM-Hotword to MMM-AssistantMk2 and also for relaying from MMM-AssistantMk2 to other module.)
 Here is configuration sample.
 ```javascript
-//MMM-NotificationTrigger 
+//MMM-NotificationTrigger
 {
       module: "MMM-NotificationTrigger",
       config: {
         useWebhook:true,
         triggers:[
           { //If there is ASSISTANT_ACTION, you can control other module here. In this sample, ALERT module will show message.
-            trigger: "ASSISTANT_ACTION", 
+            trigger: "ASSISTANT_ACTION",
             triggerSenderFilter: function(sender) {
               if (sender.name == "MMM-AssistantMk2") {
                 return true;
@@ -393,6 +401,29 @@ And for who doesn't want any commands (using just pure Assistant for test). You 
 Just click the Mic icon to activate.
 (I'll provide more touchscreen-friendly functions in some days.)
 
+
+### use `youtube.notifyPlaying`
+If you want your player would not be interrupted by it's sound itself awakening hotword,
+set `youtube.notifyPlaying` to `true`. and add this code to `notificationTrigger` section of `config.js`
+```js
+... other triggers ...
+{
+  trigger: "ASSISTANT_VIDEO_PLAYING",
+  fires:[
+    {fire: "HOTWORD_PAUSE"}
+  ]
+},
+{
+  trigger: "ASSISTANT_VIDEO_STOP",
+  fires:[
+    {fire: "HOTWORD_RESUME"}
+  ]
+},
+... other triggers ...
+```
+But with this setting, you cannot stop the video paying because it will not be interrupted by even your voice also.
+If you want to stop the Video, you should emit `ASSISTANT_CLEAR`.
+
 ### Tested
 - MagicMirror : 2.4.1
 - nodeJS : 8.11.3 & 10.0.x
@@ -402,8 +433,8 @@ Just click the Mic icon to activate.
 
 ### Known Issues
 - Invalid Parameters when youtube playing : Most of those cases, owner of video doesn't allow playing video out of youtube. try another.
-- Sometimes response without voice. : Yes, Google Tech team also knows that. 
-- Some functions are not supported : Originally, screen output is made for REAL SMART TV (e.g. LG TV) with Google Assistant, thus REAL TV can interact the screen output with remotecontroller or something automatic processed. but we aren't. 
+- Sometimes response without voice. : Yes, Google Tech team also knows that.
+- Some functions are not supported : Originally, screen output is made for REAL SMART TV (e.g. LG TV) with Google Assistant, thus REAL TV can interact the screen output with remotecontroller or something automatic processed. but we aren't.
 - Result of Image search? web search? : I'm considering how it could be used. it is not easy as my expectation.
 
 
