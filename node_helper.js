@@ -64,6 +64,7 @@ module.exports = NodeHelper.create({
 			let foundHook = []
 			let foundAction = null
 			let foundVideo = null
+			let foundVideoList = null
 			let audioError = 0
 
 
@@ -130,6 +131,7 @@ module.exports = NodeHelper.create({
 						"foundHook": foundHook,
 						"foundAction": foundAction,
 						"foundVideo": foundVideo,
+						"foundVideoList": foundVideoList,
 						"error": null,
 						"continue": false
 					}
@@ -156,8 +158,13 @@ module.exports = NodeHelper.create({
 
 					// TODO:I'll put some code here for web scrapping for contents reading.
 
-					var re = new RegExp("v\=([0-9a-zA-Z]+)", "ig")
-					var youtube = re.exec(str)
+					//For Image Search
+					//https://www.google.com/search?tbm=isch
+
+					var re = new RegExp("(tbm=isch[^<]*)", "ig")
+					var isch = re.exec(str)
+					console.log("image", isch)
+
 					var contents = file.writeFile(filePath, str,
 						(error) => {
 							if (error) {
@@ -166,11 +173,23 @@ module.exports = NodeHelper.create({
 							this.sendSocketNotification("SCREEN", str)
 						}
 					)
-
-					if (youtube) {
-						console.log("video found:", youtube[1])
-						foundVideo = youtube[1]
+					//www.youtube.com/watch?v=8O5pkFdi93k
+					var re = new RegExp("youtube\.com\/watch\\?v\=([0-9a-zA-Z\-\_]+)", "ig")
+					var youtubeVideo = re.exec(str)
+					if (youtubeVideo) {
+						console.log("video found:", youtubeVideo[1])
+						foundVideo = youtubeVideo[1]
 					}
+
+					//(m.youtube.com - https://m.youtube.com/playlist?list=PLCdlJaCXfCUC30qzcup9L2DO9mv703eox)
+					var re = new RegExp("youtube\.com\/playlist\\?list\=([a-zA-Z0-9\-\_]+)", "ig")
+					var youtubeList = re.exec(str)
+					if (youtubeList) {
+						console.log("video list found:", youtubeList[1])
+						foundVideoList = youtubeList[1]
+					}
+
+
 				})
 				// catch any errors
 				.on("error", (error) => {

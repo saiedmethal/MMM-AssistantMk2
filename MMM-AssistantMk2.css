@@ -53,17 +53,21 @@
   position:absolute;
   top:0;
   left:0;
+  background-color:rgba(0,0,0,0.5);
 }
 #ASSISTANT_VIDEO {
   overflow:auto;
   border:none;
   position:absolute;
-  width:50%;
-  height:50%;
-  top:25%;
-  left:25%;
+  width:80%;
+  height:80%;
+  top:10%;
+  left:10%;
 }
 
+#ASSISTANT_VIDEO_ERROR {
+  height:20px;
+}
 
 
 #ASSISTANT_VIDEO_WRAPPER.show {

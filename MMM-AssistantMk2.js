@@ -29,7 +29,8 @@ Module.register("MMM-AssistantMk2", {
 		youtube: {
 			use:true,
 			height: "480",
-			width: "854"
+			width: "854",
+			notifyPlaying: true, // tell other modules whether youtube is playing or not.
 		},
 		auth: {
 			keyFilePath: "./credentials.json"
@@ -118,6 +119,9 @@ Module.register("MMM-AssistantMk2", {
 		var videoWrapper = document.createElement("div")
 		videoWrapper.id = "ASSISTANT_VIDEO_WRAPPER"
 		videoWrapper.appendChild(video)
+		var videoError = document.createElement("div")
+		videoError.id = "ASSISTANT_VIDEO_ERROR"
+		videoWrapper.appendChild(videoError)
 		document.body.appendChild(videoWrapper)
 
 
@@ -144,18 +148,27 @@ Module.register("MMM-AssistantMk2", {
 					"onStateChange": (event)=>{
 						if (event.data == 0) {
 							setTimeout(()=>{
+								/*
 								event.target.stopVideo()
 								var wrapper = document.getElementById("ASSISTANT_VIDEO_WRAPPER")
 								wrapper.className = "hide"
+								*/
+								self.hideVideo()
 							}, 1000)
+
 						}
 					},
 					"onError": (event)=> {
 						console.log("youtube error:", event.data)
+						var er = document.getElementById("ASSISTANT_VIDEO_ERROR")
+						er.innerHTML = "Youtube error: " + event.data
 						setTimeout(()=>{
+							/*
 							event.target.stopVideo()
 							var wrapper = document.getElementById("ASSISTANT_VIDEO_WRAPPER")
 							wrapper.className = "hide"
+							*/
+							self.hideVideo()
 						}, 5000)
 					}
 				}
@@ -190,8 +203,20 @@ Module.register("MMM-AssistantMk2", {
 		screen.className = "hide"
 	},
 
-	showVideo: function(id) {
-		this.ytp.loadVideoById(id, 0, "default")
+	showVideo: function(id, type="video") {
+		console.log(type)
+		if (type == "video") {
+			this.ytp.loadVideoById(id, 0, "default")
+		} else {
+			this.ytp.loadPlaylist({
+				"list":id,
+				"listType":"playlist",
+				"index":0
+			})
+		}
+		if (this.config.youtube.notifyPlaying == true) {
+			this.sendNotification("ASSISTANT_VIDEO_PLAYING")
+		}
 		this.ytp.playVideo()
 		var wrapper = document.getElementById("ASSISTANT_VIDEO_WRAPPER")
 		wrapper.className = "show"
@@ -199,9 +224,16 @@ Module.register("MMM-AssistantMk2", {
 
 	hideVideo: function() {
 		var wrapper = document.getElementById("ASSISTANT_VIDEO_WRAPPER")
+		var er = document.getElementById("ASSISTANT_VIDEO_ERROR")
+		er.innerHTML = ""
 		this.ytp.stopVideo()
+		if (this.config.youtube.notifyPlaying == true) {
+			this.sendNotification("ASSISTANT_VIDEO_STOP")
+		}
 		wrapper.className = "hide"
 	},
+
+
 
 	displayStatus: function(mode, text) {
 		var wrapper = document.getElementById("ASSISTANT")
@@ -239,7 +271,6 @@ Module.register("MMM-AssistantMk2", {
 
 
 	socketNotificationReceived: function (notification, payload) {
-		console.log("AT_NOTI:", notification)
 		switch(notification) {
 		case "INITIALIZED":
 			//do nothing
@@ -275,7 +306,15 @@ Module.register("MMM-AssistantMk2", {
 					setTimeout(()=>{
 						this.hideScreen()
 						this.hideContent()
-						this.showVideo(payload.foundVideo)
+						this.showVideo(payload.foundVideo, "video")
+					}, 1500)
+				}
+				if (payload.foundVideoList) {
+					console.log ("Video Playlist:", payload.foundVideoList)
+					setTimeout(()=>{
+						this.hideScreen()
+						this.hideContent()
+						this.showVideo(payload.foundVideoList, "playlist")
 					}, 1500)
 				}
 				if (payload.foundAction) {
