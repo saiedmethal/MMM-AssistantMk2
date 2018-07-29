@@ -83,6 +83,7 @@ Module.register("MMM-AssistantMk2", {
 		this.headerContent = ""
 		this.screenContent = null
 		this.ytp = null
+		this.videoPlaying = false
 		console.log("start")
 	},
 
@@ -103,7 +104,6 @@ Module.register("MMM-AssistantMk2", {
 		message.id = "ASSISTANT_MESSAGE"
 		wrapper.appendChild(micImg)
 		wrapper.appendChild(message)
-		console.log("getDom")
 		return wrapper
 	},
 
@@ -194,7 +194,6 @@ Module.register("MMM-AssistantMk2", {
 	},
 
 	showVideo: function(id, type="video") {
-		console.log(type)
 		if (type == "video") {
 			this.ytp.loadVideoById(id, 0, "default")
 		} else {
@@ -205,6 +204,7 @@ Module.register("MMM-AssistantMk2", {
 			})
 		}
 		if (this.config.youtube.notifyPlaying == true) {
+			this.videoPlaying = true
 			this.sendNotification("ASSISTANT_VIDEO_PLAYING")
 		}
 		this.ytp.playVideo()
@@ -217,8 +217,9 @@ Module.register("MMM-AssistantMk2", {
 		var er = document.getElementById("ASSISTANT_VIDEO_ERROR")
 		er.innerHTML = ""
 		this.ytp.stopVideo()
-		if (this.config.youtube.notifyPlaying == true) {
+		if (this.config.youtube.notifyPlaying == true && this.videoPlaying) {
 			this.sendNotification("ASSISTANT_VIDEO_STOP")
+			this.videoPlaying = false
 		}
 		wrapper.className = "hide"
 	},

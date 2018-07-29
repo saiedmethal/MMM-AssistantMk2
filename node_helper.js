@@ -36,7 +36,6 @@ module.exports = NodeHelper.create({
 	},
 
 	activate: function(payload) {
-		console.log("payload", payload)
 		var transcriptionHook = this.config.transcriptionHook
 
 		var cfgInstance = {
@@ -163,7 +162,7 @@ module.exports = NodeHelper.create({
 
 					var re = new RegExp("(tbm=isch[^<]*)", "ig")
 					var isch = re.exec(str)
-					console.log("image", isch)
+					console.log("image:", isch)
 
 					var contents = file.writeFile(filePath, str,
 						(error) => {
