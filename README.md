@@ -188,7 +188,7 @@ In case of multi-users, use like this.
   position: "top_left",
   config: {
     defaultProfile: "dad"
-    profiles: [
+    profiles: {
       "dad": {
         profileFile: "dad.json"
         lang: "de-DE"
@@ -201,7 +201,7 @@ In case of multi-users, use like this.
         profileFile: "tommy.json"
         lang: "en-US"
       }
-    ],
+    },
   }
 },
 ```
