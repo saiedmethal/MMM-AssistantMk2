@@ -53,6 +53,13 @@ npm install --save-dev electron-rebuild
 ./node_modules/.bin/electron-rebuild   # It could takes 10~30 minutes.
 ```
 
+When you meet this kinds of errors;
+```
+gyp ERR! stack Error: make failed with exit code: 2
+```
+See this page;
+https://github.com/nodejs/node-gyp/issues/809
+
 ### Get Auth and credentials to make profile.
 1. Create or open a project in the [Actions Console](https://console.actions.google.com/)
 2. After creation, Enable `Google Assistant API` for your project in the [Cloud Platform Console](https://console.cloud.google.com/)
