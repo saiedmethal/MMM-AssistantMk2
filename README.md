@@ -49,6 +49,7 @@ And as you know, there could be many problems or not. Wish you good luck.
 (I recommend to execute this after making profiles.)
 
 ```sh
+cd ~/MagicMirror/modules/MMM-AssistantMk2
 npm install --save-dev electron-rebuild
 ./node_modules/.bin/electron-rebuild   # It could takes 10~30 minutes.
 ```
