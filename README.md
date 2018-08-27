@@ -444,6 +444,45 @@ If you want to stop the Video, you should emit `ASSISTANT_CLEAR`.
 - Sometimes response without voice. : Yes, Google Tech team also knows that.
 - Some functions are not supported : Originally, screen output is made for REAL SMART TV (e.g. LG TV) with Google Assistant, thus REAL TV can interact the screen output with remotecontroller or something automatic processed. but we aren't.
 - Result of Image search? web search? : I'm considering how it could be used. it is not easy as my expectation.
+#### Some Troubleshootings
+- Error: /urs/lib/arm-linux-gnueabihf/libstdc++.so.6: version 'GLIBCXX_3.4.21' not found
+```
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install build-essentials
+sudo apt-get install gcc-5
+```
+- grpc Electron-rebuild issues. (until proper binaries provided)
+`grpc` was updated recently, but their team havn't dispatched proper binaries for new version. So it could make problem when you try electron-rebuild.
+Here are some experimental trials;
+1) use `grpc-js` instead `grpc`
+```
+cd ~/MagicMirror/modules
+rm -rf MMM-AssistantMk2/
+git clone https://github.com/eouia/
+cd MMM-AssistantMk2
+npm install
+cd node_modules
+rm -rf grpc
+cd ..
+npm install @grpc/grpc-js
+npm install --save-dev electron-rebuild
+./node_modules/.bin/electron-rebuild
+```
+2) downgrade grpc to v1.13
+```
+cd ~/MagicMirror/modules
+rm -rf MMM-AssistantMk2/
+git clone https://github.com/eouia/
+cd MMM-AssistantMk2
+npm install
+cd node_modules
+rm -rf grpc
+cd ..
+npm install grpc@1.13
+npm install --save-dev electron-rebuild
+./node_modules/.bin/electron-rebuild
+```
 
 
 ### TODO
