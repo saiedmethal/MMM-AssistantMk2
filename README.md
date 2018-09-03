@@ -459,7 +459,7 @@ Here are some experimental trials;
 ```
 cd ~/MagicMirror/modules
 rm -rf MMM-AssistantMk2/
-git clone https://github.com/eouia/
+git clone https://github.com/eouia/MMM-AssistantMk2
 cd MMM-AssistantMk2
 npm install
 cd node_modules
@@ -473,7 +473,7 @@ npm install --save-dev electron-rebuild
 ```
 cd ~/MagicMirror/modules
 rm -rf MMM-AssistantMk2/
-git clone https://github.com/eouia/
+git clone https://github.com/eouia/MMM-AssistantMk2
 cd MMM-AssistantMk2
 npm install
 cd node_modules
