@@ -20,7 +20,8 @@
     "google-assistant": "^0.5.2",
     "node-record-lpcm16": "^0.3.0",
     "speaker": "^0.4.1",
-    "string_decoder": "^1.1.1"
+    "string_decoder": "^1.1.1",
+    "wav": "^1.0.2"
   },
   "devDependencies": {
     "electron-rebuild": "^1.8.1"

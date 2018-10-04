@@ -21,6 +21,20 @@ So, I'd made this module newly.
 [[PlaceHolder]]
 
 ### Updates
+#### [1.1.0] - 2018.10.04
+- MP3 Output is supported. Now you can get more unchunky sound result.(Set `audio.encodingOut` to `MP3` // `OGG` is not yet supported.)
+- `ding.wav` will be played when Assistant is ready to hear your voice.
+- For update from prior version
+```
+sudo apt-get install mpg321
+cd ~/MagicMirror/modules/MMM-AssistantMk2
+git pull
+npm install --save wav
+```
+
+This version is not yet merged to master. I'll merge this to master after some tests.
+
+
 #### [1.0.1] - 2018.07.25.
 - Youtube playlist can be playable
 - Some uncaught youtube videos are caught now

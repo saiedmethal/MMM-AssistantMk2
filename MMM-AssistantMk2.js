@@ -39,6 +39,7 @@ Module.register("MMM-AssistantMk2", {
 			sampleRateIn: 16000, // supported rates are between 16000-24000 (defaults to 16000)
 			encodingOut: "LINEAR16", // supported are LINEAR16 / MP3 / OPUS_IN_OGG (defaults to LINEAR16)
 			sampleRateOut: 24000, // supported are 16000 / 24000 (defaults to 24000)
+			mp3Player: "mpg321" //mp3 player. if needed, give the proper options.
 		},
 		defaultProfile: "default",
 		profiles: {
