@@ -29,6 +29,7 @@ So, I'd made this module newly.
 sudo apt-get install mpg321
 cd ~/MagicMirror/modules/MMM-AssistantMk2
 git pull
+git checkout 1.1.0
 npm install --save wav
 ```
 
