@@ -33,8 +33,6 @@ git checkout 1.1.0
 npm install --save wav
 ```
 
-This version is not yet merged to master. I'll merge this to master after some tests.
-
 
 #### [1.0.1] - 2018.07.25.
 - Youtube playlist can be playable
@@ -45,8 +43,10 @@ This version is not yet merged to master. I'll merge this to master after some t
 ### Installation
 1. Install pre-dependencies
 ```sh
-sudo apt-get install libasound2-dev sox libsox-fmt-all
+sudo apt-get install libasound2-dev sox libsox-fmt-all mpg321
 ```
+- `mpg321` is mp3 player when you select `MP3` as sound output, so you can change to others or unuse.
+
 1. Install Module
 ```sh
 git clone https://github.com/eouia/MMM-AssistantMk2.git
