@@ -8,7 +8,10 @@ const path = require("path")
 const record = require("node-record-lpcm16")
 const Speaker = require("speaker")
 const GoogleAssistant = require("google-assistant")
-const exec = require("child_process").exec;
+const exec = require("child_process").exec
+const fs = require("fs")
+const wav = require("wav")
+
 
 var NodeHelper = require("node_helper")
 
@@ -66,22 +69,43 @@ module.exports = NodeHelper.create({
 			let foundVideoList = null
 			let audioError = 0
 
-
+			if (this.config.audio.encodingOut == "MP3") {
+				var mp3File = path.resolve(__dirname, "temp.mp3")
+				var wstream = fs.createWriteStream(mp3File)
+			}
 			// setup the conversation
 			conversation
 				// send the audio buffer to the speaker
 				.on("audio-data", (data) => {
-					try {
-					  speaker.write(data)
-					} catch (error) {
-						if (audioError == 0) {
-							speaker.end() //
-							console.log(error)
+					if (this.config.audio.encodingOut == "MP3") {
+						wstream.on('finish', ()=>{
+						 	//console.log('file has been written')
+					 		wstream.end()
+						})
+						try {
+							wstream.write(data)
+							//console.log("writing")
+						} catch (error) {
+							//wstream.end()
+							//console.log(error)
+							console.log("Some error happens. Try again.")
 							this.sendSocketNotification("ERROR", "AUDIO_ERROR")
 						}
-						audioError++
+					} else {
+						try {
+						  speaker.write(data)
+						} catch (error) {
+							if (audioError == 0) {
+								speaker.end() //
+								//console.log(error)
+								console.log("Some error happens. Try again.")
+								this.sendSocketNotification("ERROR", "AUDIO_ERROR")
+							}
+							audioError++
+						}
 					}
-    		})
+
+    			})
 				// done speaking, close the mic
 				.on("end-of-utterance", () => {
 					console.log("end-of-utterance")
@@ -125,7 +149,7 @@ module.exports = NodeHelper.create({
 				})
 				// once the conversation is ended, see if we need to follow up
 				.on("ended", (error, continueConversation) => {
-					speaker.end() //
+
 					var payload = {
 						"foundHook": foundHook,
 						"foundAction": foundAction,
@@ -145,7 +169,19 @@ module.exports = NodeHelper.create({
 						console.log("Conversation Completed")
 					}
 
-					this.sendSocketNotification("TURN_OVER", payload)
+					speaker.end() //
+					if (this.config.audio.encodingOut == "MP3") {
+						wstream.end()
+						exec(this.config.audio.mp3Player + ' ' + mp3File, (err, stdout, stderr) => {
+							//console.log(err, stdout, stderr)
+
+							this.sendSocketNotification("TURN_OVER", payload)
+						})
+					} else {
+						this.sendSocketNotification("TURN_OVER", payload)
+					}
+
+
 				})
 
 				.on("screen-data", (screen) => {
@@ -162,7 +198,7 @@ module.exports = NodeHelper.create({
 
 					var re = new RegExp("(tbm=isch[^<]*)", "ig")
 					var isch = re.exec(str)
-					console.log("image:", isch)
+					//console.log("image:", isch)
 
 					var contents = file.writeFile(filePath, str,
 						(error) => {
@@ -231,7 +267,37 @@ module.exports = NodeHelper.create({
 			// start a conversation!
 				console.log("assistant ready")
 				this.sendSocketNotification("ASSISTANT_READY")
-				assistant.start(cfgInstance.conversation)
+
+				var wavReader = fs.createReadStream(path.resolve(__dirname, "resources/ding.wav")).pipe(wav.Reader())
+				var buffer = null;
+
+				wavReader.on('format', (format) => {
+				    //console.log("Playing wav.", format)
+				    wavReader.on('data', (chunk) => {
+				        if(buffer)
+				            buffer = Buffer.concat([buffer, chunk])
+				        else
+				            buffer = chunk
+				    } )
+				    .on( 'end', function() {
+				    	var s = new Speaker(format)
+							try {
+								s.write(buffer)
+					    	setTimeout(()=>{
+					    		s.end()
+					    		assistant.start(cfgInstance.conversation)
+					    	}, 500)
+							} catch (error) {
+								s.end()
+								console.log(error)
+								console.log("Some error happens. Try again.")
+								this.sendSocketNotification("ERROR", "AUDIO_ERROR")
+							}
+
+
+				    } )
+				} )
+				//assistant.start(cfgInstance.conversation)
 			})
 			.on("started", startConversation)
 			.on("error", (error) => {

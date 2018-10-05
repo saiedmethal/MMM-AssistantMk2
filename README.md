@@ -21,6 +21,19 @@ So, I'd made this module newly.
 [[PlaceHolder]]
 
 ### Updates
+#### [1.1.0] - 2018.10.04
+- MP3 Output is supported. Now you can get more unchunky sound result.(Set `audio.encodingOut` to `MP3` // `OGG` is not yet supported.)
+- `ding.wav` will be played when Assistant is ready to hear your voice.
+- For update from prior version
+```
+sudo apt-get install mpg321
+cd ~/MagicMirror/modules/MMM-AssistantMk2
+git pull
+git checkout 1.1.0
+npm install --save wav
+```
+
+
 #### [1.0.1] - 2018.07.25.
 - Youtube playlist can be playable
 - Some uncaught youtube videos are caught now
@@ -30,8 +43,10 @@ So, I'd made this module newly.
 ### Installation
 1. Install pre-dependencies
 ```sh
-sudo apt-get install libasound2-dev sox libsox-fmt-all
+sudo apt-get install libasound2-dev sox libsox-fmt-all mpg321
 ```
+- `mpg321` is mp3 player when you select `MP3` as sound output, so you can change to others or unuse.
+
 1. Install Module
 ```sh
 git clone https://github.com/eouia/MMM-AssistantMk2.git
@@ -119,7 +134,7 @@ Below values are pre-set as default values. It means, you can put even nothing i
 		useScreen: true,  // set this to true if you want to output results to a screen
 		//showed contents will be hidden when new conversation starts or ASSISTANT_STOP_CONTENT is comming.
 
-    screenZoom: "80%",
+    		screenZoom: "80%",
 		transcriptionHook: { //if you set hooking phrase here, this module will catch these words in your speech and emit ASSISTANT_HOOK notification.
 			/*
 			"SCREEN_OFF" : "screen off",
@@ -141,8 +156,9 @@ Below values are pre-set as default values. It means, you can put even nothing i
 		audio: {
 			encodingIn: "LINEAR16", // supported are LINEAR16 / FLAC (defaults to LINEAR16)
 			sampleRateIn: 16000, // supported rates are between 16000-24000 (defaults to 16000)
-			encodingOut: "LINEAR16", // supported are LINEAR16 / MP3 / OPUS_IN_OGG (defaults to LINEAR16), currently only LINEAR16 is implemented to output, others are not yet. so use LINEAR16.
+			encodingOut: "LINEAR16", // supported are LINEAR16 / MP3 / (defaults to LINEAR16) When you select MP3, you need mp3Player option. 
 			sampleRateOut: 24000, // supported are 16000 / 24000 (defaults to 24000)
+			mp3Player: "mpg321" // If needed, use with options.
 		},
 		defaultProfile: "default", // This default profile should be in `profiles` field.
 		profiles: {
