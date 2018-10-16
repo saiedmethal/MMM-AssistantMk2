@@ -291,7 +291,7 @@ module.exports = NodeHelper.create({
 								s.end()
 								console.log(error)
 								console.log("Some error happens. Try again.")
-								this.sendSocketNotification("ERROR", "AUDIO_ERROR")
+								
 							}
 
 
